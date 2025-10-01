@@ -90,6 +90,8 @@ export default function QuizPage() {
 
     if (selectedAnswer === questions[currentQuestion].correctAnswer) {
       setScore(score + 1)
+      const currentScore = Number.parseInt(sessionStorage.getItem("totalScore") || "0")
+      sessionStorage.setItem("totalScore", String(currentScore + 20))
     }
   }
 
@@ -113,14 +115,14 @@ export default function QuizPage() {
     const percentage = Math.round((score / questions.length) * 100)
 
     return (
-      <main className="min-h-screen bg-gradient-to-b from-[#0a0e27] via-[#1a1f3a] to-[#0a0e27] text-white flex items-center justify-center p-4 relative">
+      <main className="min-h-screen bg-gradient-to-b from-[#0a0e27] via-[#1a1f3a] to-[#0a0e27] text-white flex items-center justify-center p-4 relative font-space-grotesk">
         <SpaceBackground3D />
         <Card className="max-w-2xl w-full p-8 md:p-12 bg-slate-900/50 border-slate-700/50 backdrop-blur text-center space-y-8 relative z-10">
           <div className="flex justify-center">
             <Award className="h-32 w-32 text-yellow-400 animate-bounce" />
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold">Mission Complete!</h1>
+          <h1 className="text-5xl md:text-6xl font-bold font-orbitron">Mission Complete!</h1>
 
           <div className="space-y-6">
             <p className="text-2xl text-blue-200">
@@ -128,7 +130,7 @@ export default function QuizPage() {
             </p>
 
             <div className="py-8">
-              <div className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">
+              <div className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400 font-orbitron">
                 {percentage}%
               </div>
               <p className="text-xl text-muted-foreground mt-4">
@@ -138,7 +140,7 @@ export default function QuizPage() {
 
             <div className="p-8 bg-gradient-to-r from-blue-950/50 to-purple-950/50 border-2 border-blue-500/30 rounded-xl">
               <Award className="h-16 w-16 text-yellow-400 mx-auto mb-4" />
-              <h3 className="font-bold text-2xl text-yellow-400 mb-2">Achievement Unlocked</h3>
+              <h3 className="font-bold text-2xl text-yellow-400 mb-2 font-orbitron">Achievement Unlocked</h3>
               <p className="text-lg text-blue-100">Junior Astronaut Explorer</p>
             </div>
           </div>
@@ -146,7 +148,7 @@ export default function QuizPage() {
           <Button
             onClick={handleViewCertificate}
             size="lg"
-            className="w-full h-16 text-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 font-bold"
+            className="w-full h-16 text-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 font-bold font-orbitron"
           >
             View Your Certificate
           </Button>
@@ -160,18 +162,17 @@ export default function QuizPage() {
   const QuestionIcon = questionIcons[currentQuestion]
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#0a0e27] via-[#1a1f3a] to-[#0a0e27] text-white relative">
+    <main className="min-h-screen bg-gradient-to-b from-[#0a0e27] via-[#1a1f3a] to-[#0a0e27] text-white relative font-space-grotesk">
       <SpaceBackground3D />
       <div className="container mx-auto px-4 py-12 relative z-10">
         <div className="mb-8 text-center space-y-4">
           <QuestionIcon className="h-16 w-16 mx-auto text-blue-400" />
-          <h1 className="text-4xl md:text-5xl font-bold text-white">Knowledge Check</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white font-orbitron">Knowledge Check</h1>
           <p className="text-xl text-blue-200">
             {currentQuestion + 1} / {questions.length}
           </p>
         </div>
 
-        {/* Progress Bar */}
         <div className="max-w-2xl mx-auto mb-8">
           <div className="h-3 bg-slate-800 rounded-full overflow-hidden">
             <div
@@ -181,7 +182,6 @@ export default function QuizPage() {
           </div>
         </div>
 
-        {/* Question Card */}
         <Card className="max-w-2xl mx-auto p-8 bg-slate-900/70 border-slate-700/50 backdrop-blur">
           <h2 className="text-2xl md:text-3xl font-semibold mb-8 leading-relaxed text-center text-white">
             {question.question}
@@ -224,7 +224,7 @@ export default function QuizPage() {
                 isCorrect ? "bg-green-500/20 border-2 border-green-500/50" : "bg-red-500/20 border-2 border-red-500/50"
               }`}
             >
-              <p className="font-bold text-xl mb-3 text-white">{isCorrect ? "Correct!" : "Not quite!"}</p>
+              <p className="font-bold text-xl mb-3 text-white font-orbitron">{isCorrect ? "Correct!" : "Not quite!"}</p>
               <p className="text-base text-white/90 leading-relaxed">{question.explanation}</p>
             </div>
           )}
@@ -235,7 +235,7 @@ export default function QuizPage() {
                 onClick={handleSubmitAnswer}
                 disabled={selectedAnswer === null}
                 size="lg"
-                className="w-full h-14 text-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                className="w-full h-14 text-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold font-orbitron"
               >
                 Submit Answer
               </Button>
@@ -243,7 +243,7 @@ export default function QuizPage() {
               <Button
                 onClick={handleNextQuestion}
                 size="lg"
-                className="w-full h-14 text-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                className="w-full h-14 text-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold font-orbitron"
               >
                 {currentQuestion < questions.length - 1 ? "Next Question" : "View Results"}
               </Button>
