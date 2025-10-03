@@ -6,17 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { ArrowRight, Search, Loader2, MapPin, Zap } from "lucide-react"
-import dynamic from "next/dynamic"
 import { EarthGlobe } from "@/components/earth-globe"
-const EarthModelDynamic = dynamic(() => import("@/components/earth-model").then(m => m.EarthModel), { ssr: false });
-const CesiumGlobeDynamic = dynamic(() => import("@/components/cesium-globe").then(m => m.CesiumGlobe), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center text-cyan-300 text-xs font-mono opacity-70 animate-pulse h-full">
-      Loading Cesium...
-    </div>
-  )
-});
 import { ErrorBoundary } from "@/components/error-boundary"
 import { cities, CityInfo } from "@/lib/cities"
 import Image from "next/image"
@@ -160,9 +150,7 @@ export default function CupolaPage() {
   const [currentImage, setCurrentImage] = useState<EarthImage | null>(null)
   const [score, setScore] = useState(0)
   const [attempts, setAttempts] = useState(3)
-  const [globeMode, setGlobeMode] = useState<'three' | 'cesium' | 'model'>('cesium')
   const [globeKey, setGlobeKey] = useState(0)
-  const [cesiumKey, setCesiumKey] = useState(0)
 
   useEffect(() => {
     const data = sessionStorage.getItem("userData")
@@ -248,71 +236,33 @@ export default function CupolaPage() {
               </div>
               {/* Globe display area centered within remaining vertical space */}
               <div className="w-full flex-1 min-h-[480px] rounded-xl overflow-hidden border border-cyan-800/40 bg-black/40 relative flex flex-col items-center justify-center">
-                <div className="absolute top-3 right-3 z-20 flex gap-2 text-xs">
-                  <button
-                    onClick={() => setGlobeMode('three')}
-                    className={`px-3 py-1 rounded-md border ${globeMode==='three' ? 'bg-cyan-600 border-cyan-400 text-white' : 'bg-slate-800/70 border-slate-600 text-cyan-300 hover:bg-slate-700/70'} transition`}
-                  >Three</button>
-                  <button
-                    onClick={() => setGlobeMode('cesium')}
-                    className={`px-3 py-1 rounded-md border ${globeMode==='cesium' ? 'bg-cyan-600 border-cyan-400 text-white' : 'bg-slate-800/70 border-slate-600 text-cyan-300 hover:bg-slate-700/70'} transition`}
-                  >Cesium</button>
-                  <button
-                    onClick={() => setGlobeMode('model')}
-                    className={`px-3 py-1 rounded-md border ${globeMode==='model' ? 'bg-cyan-600 border-cyan-400 text-white' : 'bg-slate-800/70 border-slate-600 text-cyan-300 hover:bg-slate-700/70'} transition`}
-                  >Model</button>
-                  {globeMode === 'cesium' && (
-                    <button
-                      onClick={() => setCesiumKey(k => k + 1)}
-                      className="px-3 py-1 rounded-md border bg-slate-800/70 border-slate-600 text-cyan-300 hover:bg-slate-700/70 transition"
-                      title="Force re-initialize Cesium viewer"
-                    >Remount</button>
-                  )}
-                </div>
                 <div className="flex-1 relative w-full flex items-center justify-center py-4">
-                  {globeMode === 'cesium' ? (
-                    <div className="relative aspect-square w-full max-w-[560px] flex items-center justify-center mx-auto">
-                      <CesiumGlobeDynamic
-                        key={cesiumKey}
-                        onCitySelect={handleCitySelect}
-                        height={560}
-                        width={560}
-                        remountSignal={cesiumKey}
-                      />
-                    </div>
-                  ) : globeMode === 'model' ? (
-                    <div className="relative aspect-square w-full max-w-[600px] flex items-center justify-center mx-auto">
-                      <EarthModelDynamic />
-                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[10px] tracking-wider text-cyan-300/70 font-mono">Standalone 3D Earth Model</div>
-                    </div>
-                  ) : (
-                    <div className="relative w-full h-full px-2 flex items-center justify-center">
-                      <div className="relative aspect-square w-full max-w-[600px] h-auto mx-auto">
-                        <ErrorBoundary
-                          key={globeKey}
-                          fallback={(error: Error, reset: () => void) => (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/70 p-6 text-center rounded-xl">
-                              <div className="text-red-400 font-orbitron">Globe Module Error</div>
-                              <div className="text-xs text-red-300 max-w-sm font-mono opacity-80">
-                                {error.message}
-                              </div>
-                              <button
-                                onClick={() => {
-                                  reset();
-                                  setTimeout(() => setGlobeKey((k) => k + 1), 50);
-                                }}
-                                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-md text-white text-sm font-semibold"
-                              >
-                                Retry Globe
-                              </button>
+                  <div className="relative w-full h-full px-2 flex items-center justify-center">
+                    <div className="relative aspect-square w-full max-w-[600px] h-auto mx-auto">
+                      <ErrorBoundary
+                        key={globeKey}
+                        fallback={(error: Error, reset: () => void) => (
+                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/70 p-6 text-center rounded-xl">
+                            <div className="text-red-400 font-orbitron">Globe Module Error</div>
+                            <div className="text-xs text-red-300 max-w-sm font-mono opacity-80">
+                              {error.message}
                             </div>
-                          )}
-                        >
-                          <EarthGlobe key={globeKey} onCitySelect={handleCitySelect} fill />
-                        </ErrorBoundary>
-                      </div>
+                            <button
+                              onClick={() => {
+                                reset();
+                                setTimeout(() => setGlobeKey((k) => k + 1), 50);
+                              }}
+                              className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-md text-white text-sm font-semibold"
+                            >
+                              Retry Globe
+                            </button>
+                          </div>
+                        )}
+                      >
+                        <EarthGlobe key={globeKey} onCitySelect={handleCitySelect} fill />
+                      </ErrorBoundary>
                     </div>
-                  )}
+                  </div>
                 </div>
                 <div className="absolute top-3 left-3 text-xs text-cyan-300 bg-slate-800/70 px-3 py-1 rounded-full font-mono z-20 shadow-md">
                   Cities Loaded: {cities.length}

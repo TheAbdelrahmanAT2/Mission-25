@@ -403,7 +403,7 @@ export const EarthModel: React.FC<EarthModelProps> = ({
     };
   }, [autoRotate, rotationSpeed, dayTextureUrl, nightTextureUrl, cloudsTextureUrl, specularTextureUrl, showISS, showTerminator, showCountryBorders, showCountryLabels]);
 
-  // City markers (small yellow spheres) slightly above surface
+  // City markers (enhanced visibility: larger sphere + additive glow sprite + gentle pulse)
   useEffect(() => {
     if (!showCities) return;
     if (!sceneRef.current) return;
@@ -418,8 +418,24 @@ export const EarthModel: React.FC<EarthModelProps> = ({
         if (cityGroupRef.current) { sceneRef.current!.remove(cityGroupRef.current); cityGroupRef.current = null; }
         const group = new THREE.Group();
         const radius = 2.02; // just above surface
-  const geometry = new THREE.SphereGeometry(0.05, 16, 16);
-  const material = new THREE.MeshBasicMaterial({ color: 0xffd54a }); // warm yellow base
+        const geometry = new THREE.SphereGeometry(0.075, 20, 20); // slightly larger
+        const material = new THREE.MeshBasicMaterial({ color: 0xffe066 }); // brighter warm yellow
+
+        // Precreate a small radial gradient canvas texture for glow
+        const glowCanvas = document.createElement('canvas');
+        glowCanvas.width = glowCanvas.height = 128;
+        const gctx = glowCanvas.getContext('2d');
+        if (gctx) {
+          const grad = gctx.createRadialGradient(64,64,4, 64,64,64);
+          grad.addColorStop(0, 'rgba(255,230,102,0.9)');
+          grad.addColorStop(0.25, 'rgba(255,200,40,0.5)');
+          grad.addColorStop(1, 'rgba(255,180,0,0)');
+          gctx.fillStyle = grad;
+          gctx.fillRect(0,0,128,128);
+        }
+        const glowTex = new THREE.CanvasTexture(glowCanvas); glowTex.colorSpace = THREE.SRGBColorSpace;
+        const glowMat = new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+
         cities.forEach((c: any) => {
           const lat = c.lat; const lon = c.lng;
           if (typeof lat !== 'number' || typeof lon !== 'number') return;
@@ -428,12 +444,31 @@ export const EarthModel: React.FC<EarthModelProps> = ({
           const x = radius * Math.cos(φ) * Math.cos(λ);
           const y = radius * Math.sin(φ);
             const z = radius * Math.cos(φ) * Math.sin(λ);
-          const m = new THREE.Mesh(geometry, material.clone());
-          m.position.set(x, y, z);
-          group.add(m);
+          const markerGroup = new THREE.Group();
+          // Core sphere
+          const sphere = new THREE.Mesh(geometry, material.clone());
+          sphere.position.set(0,0,0);
+          markerGroup.add(sphere);
+          // Glow sprite
+          const sprite = new THREE.Sprite(glowMat.clone());
+          sprite.scale.set(0.35,0.35,0.35);
+          markerGroup.add(sprite);
+          markerGroup.position.set(x,y,z);
+          group.add(markerGroup);
         });
         cityGroupRef.current = group;
         sceneRef.current!.add(group);
+
+        // Pulse animation (scale markers subtly)
+        const start = performance.now();
+        const animatePulse = () => {
+          if (!cityGroupRef.current) return;
+          const t = (performance.now() - start) / 1000;
+          const scale = 1 + Math.sin(t * 2.2) * 0.15; // gentle pulse
+          cityGroupRef.current.children.forEach(ch => { ch.scale.set(scale, scale, scale); });
+          requestAnimationFrame(animatePulse);
+        };
+        animatePulse();
       } catch {}
     })();
     return () => {
