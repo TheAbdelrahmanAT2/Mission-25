@@ -1,0 +1,105 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"properties": { "ADMIN": "United States", "ISO_A3": "USA" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [[
+					[-125, 24], [-66, 24], [-66, 49], [-125, 49], [-125, 24]
+				]]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "ADMIN": "Brazil", "ISO_A3": "BRA" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [[
+					[-74, -34], [-34, -34], [-34, 6], [-74, 6], [-74, -34]
+				]]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "ADMIN": "Australia", "ISO_A3": "AUS" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [[
+					[112, -44], [154, -44], [154, -10], [112, -10], [112, -44]
+				]]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "ADMIN": "India", "ISO_A3": "IND" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [[
+					[68, 6], [97, 6], [97, 36], [68, 36], [68, 6]
+				]]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "ADMIN": "China", "ISO_A3": "CHN" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [[
+					[73, 18], [135, 18], [135, 54], [73, 54], [73, 18]
+				]]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "ADMIN": "Egypt", "ISO_A3": "EGY" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [[
+					[24, 21], [36, 21], [36, 32], [24, 32], [24, 21]
+				]]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "ADMIN": "France", "ISO_A3": "FRA" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [[
+					[-5, 42], [8.5, 42], [8.5, 51.5], [-5, 51.5], [-5, 42]
+				]]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "ADMIN": "Germany", "ISO_A3": "DEU" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [[
+					[5, 47], [15, 47], [15, 55], [5, 55], [5, 47]
+				]]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "ADMIN": "United Kingdom", "ISO_A3": "GBR" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [[
+					[-8, 49.5], [2, 49.5], [2, 59], [-8, 59], [-8, 49.5]
+				]]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "ADMIN": "Japan", "ISO_A3": "JPN" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [[
+					[129, 31], [146, 31], [146, 46], [129, 46], [129, 31]
+				]]
+			}
+		}
+	]
+}
